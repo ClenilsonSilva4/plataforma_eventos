@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-const local = "http://192.168.0.2:80/projeto/";
-
 class BuscarEvento extends StatefulWidget {
-  BuscarEvento({Key? key}) : super(key: key);
+  final String _url;
+  BuscarEvento(String url) : _url = url;
 
   @override
   _BuscarEventoState createState() => _BuscarEventoState();
@@ -23,19 +22,30 @@ class _BuscarEventoState extends State<BuscarEvento> {
 
   final Color fillTextFieldColor = Colors.black45;
   final Color borderColor = Colors.tealAccent;
+  final Color appBarBackground = Colors.teal[800]!;
   final Color textColor = Colors.white;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[800],
+      appBar: AppBar(
+        title: Text(
+          "Buscar Evento",
+          style: TextStyle(
+            color: textColor,
+            fontSize: 20,
+          ),
+        ),
+        backgroundColor: appBarBackground,
+      ),
       body: Form(
         key: _formKey,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.fromLTRB(10.0, 50.0, 10.0, 5.0),
+              padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
               child: TextFormField(
                 keyboardType: TextInputType.name,
                 decoration: InputDecoration(
@@ -223,7 +233,7 @@ class _BuscarEventoState extends State<BuscarEvento> {
   }
 
   Future<List> _getUnidades(String requestURL) async {
-    var getURL = Uri.parse(local + requestURL);
+    var getURL = Uri.parse(widget._url + requestURL);
 
     http.Response response = await http.get(getURL);
     List items = json.decode(response.body);

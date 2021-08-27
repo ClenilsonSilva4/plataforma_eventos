@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:plataforma_eventos/evento/listarEventos.dart';
+
+import 'buscarEvento.dart';
 
 class InscreverEvento extends StatefulWidget {
   final String _url;
@@ -14,11 +17,23 @@ class InscreverEvento extends StatefulWidget {
 class _InscreverEventoState extends State<InscreverEvento> {
   @override
   Widget build(BuildContext context) {
+    Map<String, String> body;
     return Scaffold(
+      backgroundColor: Colors.grey[800],
+      //TODO
+      /* body: ListarEventos()
+          .getEventosGrid(widget._url + "getEventosAbertos.php", body), */
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BuscarEvento(widget._url),
+            ),
+          );
+        },
         child: Icon(
-          Icons.search_off_rounded,
+          Icons.search_rounded,
           color: Colors.white,
         ),
         backgroundColor: Colors.deepOrange[800],

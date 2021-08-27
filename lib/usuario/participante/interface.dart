@@ -65,10 +65,12 @@ class _InterfaceState extends State<Interface> {
             backgroundColor: backgroundAppBarColor,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search_outlined, color: Color(0xDE000000)),
-            activeIcon: Icon(Icons.search, color: Color(0xFFFFFFFF)),
-            label: 'Buscar',
-            tooltip: 'Buscar novos eventos',
+            icon:
+                Icon(Icons.event_available_outlined, color: Color(0xDE000000)),
+            activeIcon:
+                Icon(Icons.event_available_rounded, color: Color(0xFFFFFFFF)),
+            label: 'Eventos',
+            tooltip: 'Eventos que o usuário pode se inscrever',
             backgroundColor: backgroundAppBarColor,
           ),
           BottomNavigationBarItem(
