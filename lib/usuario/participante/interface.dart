@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+
+import 'package:plataforma_eventos/evento/inscreverEvento.dart';
 import 'package:plataforma_eventos/usuario/participante/participante.dart';
-import 'package:plataforma_eventos/evento/buscarEvento.dart';
 import 'package:plataforma_eventos/usuario/opcoes/opcoes.dart';
 
 import 'inscricoes.dart';
@@ -43,7 +44,7 @@ class _InterfaceState extends State<Interface> {
         controller: _myPage,
         children: <Widget>[
           Inscricoes(widget._usuario.id, widget._url),
-          BuscarEvento(),
+          InscreverEvento(widget._usuario.id, widget._url),
           Certificados(widget._usuario.id, widget._url),
           Opcoes(widget._usuario, widget._url),
         ],

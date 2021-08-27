@@ -14,6 +14,15 @@ class InscreverEvento extends StatefulWidget {
 class _InscreverEventoState extends State<InscreverEvento> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: Icon(
+          Icons.search_off_rounded,
+          color: Colors.white,
+        ),
+        backgroundColor: Colors.deepOrange[800],
+      ),
+    );
   }
 }
