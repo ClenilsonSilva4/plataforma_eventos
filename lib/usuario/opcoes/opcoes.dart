@@ -21,7 +21,7 @@ class _OpcoesState extends State<Opcoes> {
   final Color _borderColor = Colors.teal[600]!;
   final Color _appBarBackground = Colors.teal[800]!;
   final Color _backgroundColor = Colors.grey[800]!;
-  final Color _accentColor = Colors.amberAccent;
+  final Color _accentColor = Colors.deepOrange[500]!;
   final Color _textColor = Colors.white;
 
   @override

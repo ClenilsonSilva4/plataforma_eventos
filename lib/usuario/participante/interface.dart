@@ -36,6 +36,15 @@ class _InterfaceState extends State<Interface> {
     });
   }
 
+  String getTodayDateString() {
+    var dateNow = DateTime.now();
+    return dateNow.year.toString() +
+        "-" +
+        dateNow.month.toString() +
+        "-" +
+        dateNow.day.toString();
+  }
+
   @override
   Widget build(BuildContext context) {
     final Color? backgroundAppBarColor = Colors.teal[800];
@@ -44,7 +53,8 @@ class _InterfaceState extends State<Interface> {
         controller: _myPage,
         children: <Widget>[
           Inscricoes(widget._usuario.id, widget._url),
-          InscreverEvento(widget._usuario.id, widget._url),
+          InscreverEvento(widget._url,
+              {"id": widget._usuario.id, "dataFim": getTodayDateString()}),
           Certificados(widget._usuario.id, widget._url),
           Opcoes(widget._usuario, widget._url),
         ],

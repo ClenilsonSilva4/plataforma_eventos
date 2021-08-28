@@ -6,11 +6,11 @@ import 'package:http/http.dart' as http;
 import 'evento.dart';
 
 class ListarEventos {
-  final Color? backgroundColorBotao = Colors.teal[600];
-  final Color textsDarkBackground = Colors.white;
-  final Color? appBarBackground = Colors.teal[800];
-  final Color? backgroundColor = Colors.grey[800];
-  final Color textsLightBackground = Colors.black;
+  final Color _backgroundColorBotao = Colors.deepOrange[800]!;
+  final Color _textsDarkBackground = Colors.white;
+  final Color _appBarBackground = Colors.teal[800]!;
+  final Color _backgroundColor = Colors.grey[800]!;
+  final Color _containerColor = Colors.grey[700]!;
 
   Future<List<Evento>> _getData(
       String requestURL, Map<String, String> body) async {
@@ -48,12 +48,13 @@ class ListarEventos {
 
   Widget getEventosGrid(String requestURL, Map<String, String> body) {
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: _backgroundColor,
       body: FutureBuilder<List<Evento>>(
         future: _getData(requestURL, body),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (!snapshot.hasError &&
-              snapshot.connectionState == ConnectionState.done) {
+              snapshot.data != null &&
+              snapshot.data.isNotEmpty) {
             return GridView.builder(
               padding: EdgeInsets.fromLTRB(5, 50, 5, 5),
               gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
@@ -108,7 +109,7 @@ class ListarEventos {
                               padding: MaterialStateProperty.all(
                                   EdgeInsets.fromLTRB(5, 0, 5, 0)),
                               backgroundColor: MaterialStateProperty.all(
-                                  backgroundColorBotao),
+                                  _backgroundColorBotao),
                             ),
                             onPressed: () {
                               Navigator.push(
@@ -127,6 +128,32 @@ class ListarEventos {
                 );
               },
             );
+          } else if (snapshot.connectionState == ConnectionState.done) {
+            if (body.containsKey("dataFim")) {
+              return Center(
+                child: Text(
+                  "Não foram encontrados eventos que o usuário possa se inscrever",
+                  style: TextStyle(
+                    color: _textsDarkBackground,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              );
+            }
+
+            return Center(
+              child: Text(
+                "Não foram encontrados eventos que o usuário esteja inscrito",
+                style: TextStyle(
+                  color: _textsDarkBackground,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            );
           }
           return Center(child: CircularProgressIndicator());
         },
@@ -136,12 +163,13 @@ class ListarEventos {
 
   Widget getEventosList(String requestURL, Map<String, String> body) {
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: _backgroundColor,
       body: FutureBuilder<List<Evento>>(
         future: _getData(requestURL, body),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (!snapshot.hasError &&
-              snapshot.connectionState == ConnectionState.done) {
+              snapshot.data != null &&
+              snapshot.data.isNotEmpty) {
             return ListView.separated(
               padding: EdgeInsets.fromLTRB(8, 50, 8, 5),
               itemCount: snapshot.data.length,
@@ -207,7 +235,7 @@ class ListarEventos {
                                   padding: MaterialStateProperty.all(
                                       EdgeInsets.all(10)),
                                   backgroundColor: MaterialStateProperty.all(
-                                      backgroundColorBotao),
+                                      _backgroundColorBotao),
                                 ),
                                 onPressed: () {
                                   Navigator.push(
@@ -228,7 +256,7 @@ class ListarEventos {
                                   padding: MaterialStateProperty.all(
                                       EdgeInsets.all(10)),
                                   backgroundColor: MaterialStateProperty.all(
-                                      backgroundColorBotao),
+                                      _backgroundColorBotao),
                                 ),
                                 onPressed: () {},
                                 child: const Text("BAIXAR"),
@@ -242,6 +270,18 @@ class ListarEventos {
                 );
               },
             );
+          } else if (snapshot.connectionState == ConnectionState.done) {
+            return Center(
+              child: Text(
+                "Não foram encontrados certificados para o usuário",
+                style: TextStyle(
+                  color: _textsDarkBackground,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            );
           }
           return Center(child: CircularProgressIndicator());
         },
@@ -251,55 +291,43 @@ class ListarEventos {
 
   Widget detalhesEvento(Evento detalhes) {
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: _backgroundColor,
       appBar: AppBar(
-        title: Column(
-          children: <Widget>[
-            Container(
-              alignment: Alignment.topLeft,
-              child: Text(
-                detalhes.nome,
-                style: TextStyle(color: textsDarkBackground, fontSize: 20),
-              ),
-            ),
-            Container(
-              alignment: Alignment.bottomLeft,
-              child: Text(
-                "Carga Horária: " + detalhes.cargaHoraria + "h",
-                style: TextStyle(
-                    color: textsDarkBackground,
-                    fontSize: 10,
-                    fontStyle: FontStyle.italic),
-              ),
-            )
-          ],
+        title: Container(
+          alignment: Alignment.topLeft,
+          child: Text(
+            detalhes.nome,
+            style: TextStyle(color: _textsDarkBackground, fontSize: 20),
+            maxLines: 2,
+          ),
         ),
-        backgroundColor: appBarBackground,
+        backgroundColor: _appBarBackground,
       ),
       body: Padding(
-        padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+        padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Text(
               "Descrição",
               style: TextStyle(
-                color: textsDarkBackground,
-                fontSize: 14,
+                color: _textsDarkBackground,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
+              textAlign: TextAlign.center,
             ),
             Container(
               padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4),
-                color: Colors.white,
+                color: _containerColor,
               ),
               child: Text(
                 detalhes.descricao,
                 style: TextStyle(
                   fontSize: 18,
-                  color: textsLightBackground,
+                  color: _textsDarkBackground,
                 ),
                 textAlign: TextAlign.justify,
               ),
@@ -309,17 +337,18 @@ class ListarEventos {
               child: Text(
                 "Inicio do Evento",
                 style: TextStyle(
-                  color: textsDarkBackground,
-                  fontSize: 14,
+                  color: _textsDarkBackground,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
+                textAlign: TextAlign.center,
               ),
             ),
             Container(
               padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4),
-                color: Colors.white,
+                color: _containerColor,
               ),
               child: Text(
                 "Data de Início: " +
@@ -328,8 +357,9 @@ class ListarEventos {
                     detalhes.horarioInicio,
                 style: TextStyle(
                   fontSize: 18,
-                  color: textsLightBackground,
+                  color: _textsDarkBackground,
                 ),
+                textAlign: TextAlign.center,
               ),
             ),
             Padding(
@@ -337,17 +367,18 @@ class ListarEventos {
               child: Text(
                 "Encerramento do Evento",
                 style: TextStyle(
-                  color: textsDarkBackground,
-                  fontSize: 14,
+                  color: _textsDarkBackground,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
+                textAlign: TextAlign.center,
               ),
             ),
             Container(
               padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4),
-                color: Colors.white,
+                color: _containerColor,
               ),
               child: Text(
                 "Data de Encerramento: " +
@@ -356,8 +387,9 @@ class ListarEventos {
                     detalhes.horarioFim,
                 style: TextStyle(
                   fontSize: 18,
-                  color: textsLightBackground,
+                  color: _textsDarkBackground,
                 ),
+                textAlign: TextAlign.center,
               ),
             ),
             Padding(
@@ -365,24 +397,53 @@ class ListarEventos {
               child: Text(
                 "Quantidade Participantes",
                 style: TextStyle(
-                  color: textsDarkBackground,
-                  fontSize: 14,
+                  color: _textsDarkBackground,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
+                textAlign: TextAlign.center,
               ),
             ),
             Container(
               padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4),
-                color: Colors.white,
+                color: _containerColor,
               ),
               child: Text(
                 detalhes.numeroMaximoParticipantes + " participantes",
                 style: TextStyle(
                   fontSize: 18,
-                  color: textsLightBackground,
+                  color: _textsDarkBackground,
                 ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 10),
+              child: Text(
+                "Carga horária",
+                style: TextStyle(
+                  color: _textsDarkBackground,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4),
+                color: _containerColor,
+              ),
+              child: Text(
+                detalhes.cargaHoraria + "h",
+                style: TextStyle(
+                  fontSize: 18,
+                  color: _textsDarkBackground,
+                ),
+                textAlign: TextAlign.center,
               ),
             ),
           ],

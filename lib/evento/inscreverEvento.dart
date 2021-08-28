@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:plataforma_eventos/evento/listarEventos.dart';
 
+import 'package:plataforma_eventos/evento/listarEventos.dart';
 import 'buscarEvento.dart';
 
 class InscreverEvento extends StatefulWidget {
   final String _url;
-  final String _idUsuario;
-  const InscreverEvento(String idUsuario, String url)
-      : _idUsuario = idUsuario,
-        _url = url;
+  final Map<String, String> _body;
+
+  const InscreverEvento(String url, Map<String, String> body)
+      : _url = url,
+        _body = body;
 
   @override
   _InscreverEventoState createState() => _InscreverEventoState();
 }
 
 class _InscreverEventoState extends State<InscreverEvento> {
+  //TODO: Criar a opção de se inscrever no evento.
   @override
   Widget build(BuildContext context) {
-    Map<String, String> body;
     return Scaffold(
       backgroundColor: Colors.grey[800],
-      //TODO
-      /* body: ListarEventos()
-          .getEventosGrid(widget._url + "getEventosAbertos.php", body), */
+      body: ListarEventos()
+          .getEventosGrid(widget._url + "getEventosAbertos.php", widget._body),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(

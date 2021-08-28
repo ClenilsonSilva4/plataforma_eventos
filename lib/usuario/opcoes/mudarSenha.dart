@@ -106,7 +106,7 @@ class _MudarSenhaState extends State<MudarSenha> {
                   style: ButtonStyle(
                     padding: MaterialStateProperty.all(EdgeInsets.all(10)),
                     backgroundColor:
-                        MaterialStateProperty.all(Colors.teal[600]),
+                        MaterialStateProperty.all(Colors.deepOrange[800]),
                   ),
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
