@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:plataforma_eventos/usuario/participante/interface.dart';
-import 'package:plataforma_eventos/usuario/participante/participante.dart';
 
-//import 'acesso/login.dart';
+import 'package:plataforma_eventos/usuario/organizador/interfaceOrganizador.dart';
+import 'usuario/organizador/organizador.dart';
 
 const url = "http://192.168.0.2:80/projeto/";
 
@@ -37,9 +36,22 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     //return Login(url);
 
     //Entra direto na interface do participante
-    return Interface(
-        Participante("2", "Participante 2", "teste7@teste.com", "ansfisoanfsa",
-            "testando", "Curso Teste"),
-        url);
+    /* return Interface Participante(
+      Participante("2", "Participante 2", "teste7@teste.com", "ansfisoanfsa",
+          "testando", "Curso Teste"),
+      url,
+    ); */
+
+    //Interface Organizador
+    return InterfaceOrganizador(
+      Organizador(
+        "1",
+        "Organizador1",
+        "teste@teste.com",
+        "84999999999",
+        "testando",
+      ),
+      url,
+    );
   }
 }

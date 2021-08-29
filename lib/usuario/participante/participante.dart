@@ -8,8 +8,8 @@ class Participante extends Usuario {
       : _curso = curso,
         super(id, nome, email, telefone, senha);
 
-  Participante.fromAnother(Participante teste)
-      : _curso = teste.curso,
+  Participante.fromUsuario(Usuario teste)
+      : _curso = "",
         super(teste.id, teste.nome, teste.email, teste.telefone, teste.senha);
 
   get curso => this._curso;

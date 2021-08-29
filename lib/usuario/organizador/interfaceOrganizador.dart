@@ -1,25 +1,23 @@
 import 'package:flutter/material.dart';
 
-import 'package:plataforma_eventos/evento/inscreverEvento.dart';
+import 'package:plataforma_eventos/usuario/organizador/organizador.dart';
 import 'package:plataforma_eventos/usuario/participante/participante.dart';
+import 'package:plataforma_eventos/evento/listarEventos.dart';
 import 'package:plataforma_eventos/usuario/opcoes/opcoes.dart';
 
-import 'inscricoes.dart';
-import 'certificados.dart';
-
-class Interface extends StatefulWidget {
-  final Participante _usuario;
+class InterfaceOrganizador extends StatefulWidget {
+  final Organizador _usuario;
   final String _url;
 
-  Interface(Participante usuario, String url)
+  InterfaceOrganizador(Organizador usuario, String url)
       : this._usuario = usuario,
         _url = url;
 
   @override
-  _InterfaceState createState() => _InterfaceState();
+  _InterfaceOrganizadorState createState() => _InterfaceOrganizadorState();
 }
 
-class _InterfaceState extends State<Interface> {
+class _InterfaceOrganizadorState extends State<InterfaceOrganizador> {
   int _selectedIndex = 0;
   PageController _myPage = PageController(initialPage: 0);
 
@@ -52,11 +50,12 @@ class _InterfaceState extends State<Interface> {
       body: PageView(
         controller: _myPage,
         children: <Widget>[
-          Inscricoes(widget._usuario.id, widget._url),
-          InscreverEvento(widget._url,
-              {"id": widget._usuario.id, "dataFim": getTodayDateString()}),
-          Certificados(widget._usuario.id, widget._url),
-          Opcoes(widget._usuario, widget._url),
+          ListarEventos().getEventosGrid(
+              widget._url + "getEventosOrganizador.php",
+              {"id": widget._usuario.id},
+              "criar",
+              context),
+          Opcoes(Participante.fromUsuario(widget._usuario), widget._url),
         ],
         onPageChanged: _onPageChanged,
       ),
@@ -68,26 +67,10 @@ class _InterfaceState extends State<Interface> {
         onTap: _onItemTapped,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_outline, color: Color(0xDE000000)),
-            activeIcon: Icon(Icons.favorite, color: Color(0xFFFFFFFF)),
-            label: 'Inscrições',
-            tooltip: 'Eventos que o usuário está inscrito',
-            backgroundColor: backgroundAppBarColor,
-          ),
-          BottomNavigationBarItem(
-            icon:
-                Icon(Icons.event_available_outlined, color: Color(0xDE000000)),
-            activeIcon:
-                Icon(Icons.event_available_rounded, color: Color(0xFFFFFFFF)),
-            label: 'Eventos',
-            tooltip: 'Eventos que o usuário pode se inscrever',
-            backgroundColor: backgroundAppBarColor,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.file_copy_outlined, color: Color(0xDE000000)),
-            activeIcon: Icon(Icons.file_copy, color: Color(0xFFFFFFFF)),
-            label: 'Certificados',
-            tooltip: 'Certificados dos eventos que o usuário participou',
+            icon: Icon(Icons.create_outlined, color: Color(0xDE000000)),
+            activeIcon: Icon(Icons.create_rounded, color: Color(0xFFFFFFFF)),
+            label: "Eventos",
+            tooltip: "Espaço para criação e visualização dos eventos",
             backgroundColor: backgroundAppBarColor,
           ),
           BottomNavigationBarItem(

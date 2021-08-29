@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:plataforma_eventos/usuario/participante/interface.dart';
+import 'package:plataforma_eventos/usuario/participante/interfaceParticipante.dart';
 
 import 'package:plataforma_eventos/usuario/participante/participante.dart';
 import 'package:plataforma_eventos/usuario/organizador/organizador.dart';
@@ -260,7 +260,7 @@ class _LoginState extends State<Login> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => Interface(_usuario, widget._url),
+          builder: (context) => InterfaceParticipante(_usuario, widget._url),
         ),
       );
     }

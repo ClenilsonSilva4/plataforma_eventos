@@ -59,7 +59,7 @@ class _OpcoesState extends State<Opcoes> {
                         fontSize: 16,
                         fontStyle: FontStyle.italic),
                   ),
-                  (widget._usuario.curso != null)
+                  (widget._usuario.curso != "")
                       ? Text(
                           widget._usuario.curso,
                           style: TextStyle(

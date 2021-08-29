@@ -21,8 +21,11 @@ class _InscreverEventoState extends State<InscreverEvento> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[800],
-      body: ListarEventos()
-          .getEventosGrid(widget._url + "getEventosAbertos.php", widget._body),
+      body: ListarEventos().getEventosGrid(
+          widget._url + "getEventosAbertos.php",
+          widget._body,
+          "inscrição",
+          context),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
