@@ -484,6 +484,7 @@ class _CriarEventoState extends State<CriarEvento> {
                 ),
                 onPressed: () {
                   _formKey.currentState!.validate();
+                  //TODO: Criar a função para envio das informações do evento para o servidor
                 },
                 child: const Text("CRIAR"),
               ),
