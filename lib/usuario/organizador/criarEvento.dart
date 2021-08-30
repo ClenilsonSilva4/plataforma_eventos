@@ -24,9 +24,54 @@ class _CriarEventoState extends State<CriarEvento> {
   TextEditingController _cargaHoraria = TextEditingController();
   TextEditingController _numeroParticipantes = TextEditingController();
 
-  Future<List>? _unidades;
+  late List _unidades;
   late DateTime _inicioEvento;
   late String _listValue;
+
+  String _getUnidadeID() {
+    for (var getUnidade in _unidades) {
+      print(getUnidade);
+      if (getUnidade.containsValue(_listValue)) {
+        return getUnidade["id_usuario"]!;
+      }
+    }
+    return "";
+  }
+
+  String _getStringForDB(String dateLocal) {
+    var splitedString = dateLocal.split("/");
+    return splitedString.elementAt(2) +
+        "-" +
+        splitedString.elementAt(1) +
+        "-" +
+        splitedString.elementAt(0);
+  }
+
+  //TODO: fazer a integração com o BD e fazer o envio das informações
+  void _createEventDB() {
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=UTF-8'
+    };
+    var criacao = DateTime.now();
+    final Map<String, String> body = {
+      "nome": _nomeEvento.text.toString(),
+      "descrição": _descricaoEvento.text.toString(),
+      "carga_horaria": _cargaHoraria.text.toString(),
+      "participantes": _numeroParticipantes.text.toString(),
+      "data_inicio": _getStringForDB(_dataInicio.text.toString()),
+      "horario_inicio": _horarioInicio.text.toString(),
+      "data_fim": _getStringForDB(_dataFim.text.toString()),
+      "horario_fim": _horarioFim.text.toString(),
+      "organizador": widget._idUsuario,
+      "unidade": _getUnidadeID(),
+      "data_criacao": criacao.year.toString() +
+          "-" +
+          criacao.month.toString() +
+          "-" +
+          criacao.day.toString(),
+      "data_autorizacao": "Aguardando",
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -432,7 +477,7 @@ class _CriarEventoState extends State<CriarEvento> {
                 ),
               ),
               FutureBuilder<List>(
-                future: _unidades,
+                future: _getNomeUnidades("getUnidadesAcademicas.php"),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   if (!snapshot.hasError &&
                       snapshot.connectionState == ConnectionState.done) {
@@ -484,7 +529,7 @@ class _CriarEventoState extends State<CriarEvento> {
                 ),
                 onPressed: () {
                   _formKey.currentState!.validate();
-                  //TODO: Criar a função para envio das informações do evento para o servidor
+                  _createEventDB();
                 },
                 child: const Text("CRIAR"),
               ),
@@ -503,12 +548,6 @@ class _CriarEventoState extends State<CriarEvento> {
     }
   }
 
-  @override
-  void initState() {
-    _unidades = _getNomeUnidades("getUnidadesAcademicas.php");
-    super.initState();
-  }
-
   Future<List> _getNomeUnidades(String requestURL) async {
     var getURL = Uri.parse(widget._url + requestURL);
 
@@ -516,6 +555,7 @@ class _CriarEventoState extends State<CriarEvento> {
     List items = json.decode(response.body);
 
     _listValue = items.first["nome"];
+    _unidades = items;
 
     return items;
   }
