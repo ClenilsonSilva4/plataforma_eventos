@@ -53,7 +53,7 @@ class _InterfaceOrganizadorState extends State<InterfaceOrganizador> {
           ListarEventos().getEventosGrid(
               widget._url + "getEventosOrganizador.php",
               {"id": widget._usuario.id},
-              "criar",
+              "criar um novo evento",
               context),
           Opcoes(Participante.fromUsuario(widget._usuario), widget._url),
         ],

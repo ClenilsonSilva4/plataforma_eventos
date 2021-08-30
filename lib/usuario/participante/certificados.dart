@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:plataforma_eventos/evento/evento.dart';
-import 'package:plataforma_eventos/evento/getEvento.dart';
+import 'package:plataforma_eventos/evento/getEventData.dart';
 
 class Certificados extends StatelessWidget {
   final String _url;
@@ -57,7 +57,7 @@ class Certificados extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.fromLTRB(5, 0, 5, 5),
                         child: Text(
-                          data.dataInicio + " - " + data.dataFim,
+                          data._dataInicio + " - " + data._dataFim,
                           style: TextStyle(
                             fontSize: 11,
                           ),

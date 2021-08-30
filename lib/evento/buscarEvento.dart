@@ -228,11 +228,11 @@ class _BuscarEventoState extends State<BuscarEvento> {
 
   @override
   void initState() {
-    unidades = _getUnidades("getUnidadesAcademicas.php");
+    unidades = _getNomeUnidades("getUnidadesAcademicas.php");
     super.initState();
   }
 
-  Future<List> _getUnidades(String requestURL) async {
+  Future<List> _getNomeUnidades(String requestURL) async {
     var getURL = Uri.parse(widget._url + requestURL);
 
     http.Response response = await http.get(getURL);

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:plataforma_eventos/evento/detalhesEvento.dart';
-import 'package:plataforma_eventos/evento/getEvento.dart';
+import 'package:plataforma_eventos/evento/getEventData.dart';
+import 'package:plataforma_eventos/usuario/organizador/criarEvento.dart';
 import 'evento.dart';
 
 class ListarEventos {
@@ -26,6 +27,8 @@ class ListarEventos {
               itemBuilder: (BuildContext context, int index) {
                 var data = snapshot.data[index];
                 return Card(
+                  color: Colors.grey[700],
+                  elevation: 5,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
@@ -33,12 +36,14 @@ class ListarEventos {
                         padding: EdgeInsets.fromLTRB(5, 5, 5, 0),
                         child: Text(
                           data.nome,
+                          textAlign: TextAlign.left,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                            color: Colors.black,
+                            color: _textsDarkBackground,
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
-                          textAlign: TextAlign.left,
                         ),
                       ),
                       Padding(
@@ -47,6 +52,7 @@ class ListarEventos {
                           data.dataInicio + " - " + data.dataFim,
                           style: TextStyle(
                             fontSize: 11,
+                            color: _textsDarkBackground,
                           ),
                         ),
                       ),
@@ -56,12 +62,12 @@ class ListarEventos {
                           data.descricao,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 6,
+                          textAlign: TextAlign.justify,
                           style: TextStyle(
-                            color: Colors.black,
+                            color: _textsDarkBackground,
                             fontStyle: FontStyle.italic,
                             fontSize: 14,
                           ),
-                          textAlign: TextAlign.justify,
                         ),
                       ),
                       Expanded(
@@ -79,7 +85,9 @@ class ListarEventos {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => DetalhesEvento(
-                                      data, getActionButton("edição", context)),
+                                      data,
+                                      getActionButton(
+                                          "edição", context, requestURL)),
                                 ),
                               );
                             },
@@ -93,24 +101,12 @@ class ListarEventos {
               },
             );
           } else if (snapshot.connectionState == ConnectionState.done) {
-            if (body.containsKey("dataFim")) {
-              return Center(
-                child: Text(
-                  //TODO: Ajustar para incluir o organizador e unidade também.
-                  "Não foram encontrados eventos que o usuário possa se inscrever",
-                  style: TextStyle(
-                    color: _textsDarkBackground,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              );
-            }
-
             return Center(
               child: Text(
-                "Não foram encontrados eventos que o usuário esteja inscrito",
+                //TODO: Ajustar para incluir o organizador e unidade também.
+                (body.containsKey("dataFim"))
+                    ? ("Não foram encontrados eventos que o usuário possa se inscrever")
+                    : ("Não foram encontrados eventos que o usuário esteja inscrito"),
                 style: TextStyle(
                   color: _textsDarkBackground,
                   fontWeight: FontWeight.bold,
@@ -123,12 +119,12 @@ class ListarEventos {
           return Center(child: CircularProgressIndicator());
         },
       ),
-      floatingActionButton: getActionButton(acaoEvento, context),
+      floatingActionButton: getActionButton(acaoEvento, context, requestURL),
     );
   }
 
   FloatingActionButton? getActionButton(
-      String buttonMessage, BuildContext context) {
+      String buttonMessage, BuildContext context, String requestURL) {
     return FloatingActionButton(
       onPressed: () {
         showDialog<void>(
@@ -137,7 +133,7 @@ class ListarEventos {
             return AlertDialog(
               backgroundColor: Colors.grey[700],
               content: Text(
-                buttonMessage,
+                "Deseja " + buttonMessage + "?",
                 style: TextStyle(
                   color: _textsDarkBackground,
                 ),
@@ -145,7 +141,13 @@ class ListarEventos {
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
-                    //Navigator.push(context, MaterialPageRoute(builder: (context) => teste));
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            CriarEvento("1", "http://192.168.0.2:80/projeto/"),
+                      ),
+                    );
                   },
                   child: Text(
                     "Sim",
