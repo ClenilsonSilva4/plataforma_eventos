@@ -87,7 +87,8 @@ class ListarEventos {
                                   builder: (context) => DetalhesEvento(
                                       data,
                                       getActionButton(
-                                          "edição", context, requestURL)),
+                                          acaoEvento, context, requestURL),
+                                      acaoEvento),
                                 ),
                               );
                             },
@@ -125,62 +126,64 @@ class ListarEventos {
 
   FloatingActionButton? getActionButton(
       String buttonMessage, BuildContext context, String requestURL) {
-    return FloatingActionButton(
-      onPressed: () {
-        showDialog<void>(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              backgroundColor: Colors.grey[700],
-              content: Text(
-                "Deseja " + buttonMessage + "?",
-                style: TextStyle(
-                  color: _textsDarkBackground,
+    if (buttonMessage.contains("editar") || buttonMessage.contains("criar")) {
+      return FloatingActionButton(
+        onPressed: () {
+          showDialog<void>(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                backgroundColor: Colors.grey[700],
+                content: Text(
+                  "Deseja " + buttonMessage + "?",
+                  style: TextStyle(
+                    color: _textsDarkBackground,
+                  ),
                 ),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CriarEvento(
+                              "1", "http://192.168.0.2:80/projeto/"),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      "Sim",
+                      style: TextStyle(color: _textsDarkBackground),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      "Não",
+                      style: TextStyle(color: _textsDarkBackground),
+                    ),
+                  ),
+                ],
+              );
+            },
+          );
+        },
+        child: (buttonMessage.contains("editar"))
+            ? Icon(
+                Icons.edit_rounded,
+                color: _textsDarkBackground,
+                size: 30,
+              )
+            : Icon(
+                Icons.add_circle_outline,
+                color: _textsDarkBackground,
+                size: 30,
               ),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            CriarEvento("1", "http://192.168.0.2:80/projeto/"),
-                      ),
-                    );
-                  },
-                  child: Text(
-                    "Sim",
-                    style: TextStyle(color: _textsDarkBackground),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text(
-                    "Não",
-                    style: TextStyle(color: _textsDarkBackground),
-                  ),
-                ),
-              ],
-            );
-          },
-        );
-      },
-      child: (buttonMessage.contains("editar"))
-          ? Icon(
-              Icons.add_circle_outline,
-              color: _textsDarkBackground,
-              size: 30,
-            )
-          : Icon(
-              Icons.add_circle_outline,
-              color: _textsDarkBackground,
-              size: 30,
-            ),
-      tooltip: buttonMessage,
-      backgroundColor: _backgroundColorBotao,
-    );
+        tooltip: buttonMessage,
+        backgroundColor: _backgroundColorBotao,
+      );
+    }
   }
 }

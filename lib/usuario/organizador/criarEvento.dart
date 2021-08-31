@@ -24,6 +24,12 @@ class _CriarEventoState extends State<CriarEvento> {
   TextEditingController _cargaHoraria = TextEditingController();
   TextEditingController _numeroParticipantes = TextEditingController();
 
+  Color fillTextFieldColor = Colors.black45;
+  Color borderColor = Colors.tealAccent;
+  Color appBarBackground = Colors.teal[800]!;
+  Color textColor = Colors.white;
+  Color buttonColor = Colors.deepOrange[800]!;
+
   late List _unidades;
   late DateTime _inicioEvento;
   late String _listValue;
@@ -47,9 +53,8 @@ class _CriarEventoState extends State<CriarEvento> {
         splitedString.elementAt(0);
   }
 
-  //TODO: fazer a integração com o BD e fazer o envio das informações
-  void _createEventDB() {
-    final Map<String, String> headers = {
+  void _sendEventDB() async {
+    final Map<String, String> header = {
       'Content-Type': 'application/json; charset=UTF-8'
     };
     var criacao = DateTime.now();
@@ -71,16 +76,77 @@ class _CriarEventoState extends State<CriarEvento> {
           criacao.day.toString(),
       "data_autorizacao": "Aguardando",
     };
+
+    var getURL = Uri.parse(widget._url + "criarEvento.php");
+
+    http.Response response = await http.post(
+      getURL,
+      headers: header,
+      body: json.encode(body),
+    );
+
+    if (response.body.toString().contains("<br />")) {
+      return showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            backgroundColor: Colors.grey[700],
+            content: Text(
+              "Não foi possível criar o evento",
+              style: TextStyle(color: textColor),
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  "Cancelar",
+                  style: TextStyle(color: textColor),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  _sendEventDB();
+                },
+                child: Text(
+                  "Tentar Novamente",
+                  style: TextStyle(color: textColor),
+                ),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text(
+            "Evento criado com sucesso",
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+          duration: const Duration(milliseconds: 1500),
+          width: 280.0,
+          padding: const EdgeInsets.symmetric(
+            horizontal: 8.0,
+          ),
+          backgroundColor: buttonColor,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+        ),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    Color fillTextFieldColor = Colors.black45;
-    Color borderColor = Colors.tealAccent;
-    Color appBarBackground = Colors.teal[800]!;
-    Color textColor = Colors.white;
-    Color buttonColor = Colors.deepOrange[800]!;
-
     return Scaffold(
       backgroundColor: Colors.grey[800],
       appBar: AppBar(
@@ -100,9 +166,14 @@ class _CriarEventoState extends State<CriarEvento> {
                 padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
                 child: TextFormField(
                   keyboardType: TextInputType.name,
-                  validator: (value) => validateMandatoryCamps(value),
+                  validator: (value) {
+                    if (value!.length < 10) {
+                      return "Insira um título maior para o seu evento.";
+                    }
+                  },
                   controller: _nomeEvento,
                   style: TextStyle(color: Colors.white),
+                  maxLength: 45,
                   decoration: InputDecoration(
                     labelText: "Nome",
                     labelStyle: TextStyle(
@@ -130,6 +201,7 @@ class _CriarEventoState extends State<CriarEvento> {
                       borderRadius: BorderRadius.circular(10.0),
                       borderSide: BorderSide(color: borderColor),
                     ),
+                    counterStyle: TextStyle(color: Colors.white),
                   ),
                 ),
               ),
@@ -139,7 +211,11 @@ class _CriarEventoState extends State<CriarEvento> {
                   keyboardType: TextInputType.name,
                   controller: _descricaoEvento,
                   style: TextStyle(color: Colors.white),
-                  validator: (value) => validateMandatoryCamps(value),
+                  validator: (value) {
+                    if (value!.length < 100) {
+                      return "Insira uma descrição maior para o seu evento.";
+                    }
+                  },
                   maxLines: 10,
                   decoration: InputDecoration(
                     labelText: "Descrição",
@@ -198,7 +274,11 @@ class _CriarEventoState extends State<CriarEvento> {
                   readOnly: true,
                   controller: _dataInicio,
                   style: TextStyle(color: Colors.white),
-                  validator: (value) => validateMandatoryCamps(value),
+                  validator: (value) {
+                    if (value!.length == 0) {
+                      return "Esse campo é obrigatório";
+                    }
+                  },
                   decoration: InputDecoration(
                     labelText: "Data de Inicio",
                     labelStyle: TextStyle(
@@ -254,7 +334,11 @@ class _CriarEventoState extends State<CriarEvento> {
                   readOnly: true,
                   controller: _horarioInicio,
                   style: TextStyle(color: Colors.white),
-                  validator: (value) => validateMandatoryCamps(value),
+                  validator: (value) {
+                    if (value!.length == 0) {
+                      return "Esse campo é obrigatório";
+                    }
+                  },
                   decoration: InputDecoration(
                     labelText: "Horario de Inicio",
                     labelStyle: TextStyle(
@@ -311,7 +395,11 @@ class _CriarEventoState extends State<CriarEvento> {
                   readOnly: true,
                   controller: _dataFim,
                   style: TextStyle(color: Colors.white),
-                  validator: (value) => validateMandatoryCamps(value),
+                  validator: (value) {
+                    if (value!.length == 0) {
+                      return "Esse campo é obrigatório";
+                    }
+                  },
                   decoration: InputDecoration(
                     labelText: "Data de Encerramento",
                     labelStyle: TextStyle(
@@ -371,7 +459,11 @@ class _CriarEventoState extends State<CriarEvento> {
                   readOnly: true,
                   controller: _horarioFim,
                   style: TextStyle(color: Colors.white),
-                  validator: (value) => validateMandatoryCamps(value),
+                  validator: (value) {
+                    if (value!.length == 0) {
+                      return "Esse campo é obrigatório";
+                    }
+                  },
                   decoration: InputDecoration(
                     labelText: "Horario de Inicio",
                     labelStyle: TextStyle(
@@ -408,7 +500,8 @@ class _CriarEventoState extends State<CriarEvento> {
                   keyboardType: TextInputType.name,
                   controller: _cargaHoraria,
                   style: TextStyle(color: Colors.white),
-                  validator: (value) => validateMandatoryCamps(value),
+                  validator: (value) => validateMandatoryCamps(value!),
+                  maxLength: 3,
                   decoration: InputDecoration(
                     labelText: "Carga Horaria",
                     labelStyle: TextStyle(
@@ -418,6 +511,7 @@ class _CriarEventoState extends State<CriarEvento> {
                     hintStyle: TextStyle(
                       color: Colors.white,
                     ),
+                    counterStyle: TextStyle(color: Colors.white),
                     filled: true,
                     fillColor: fillTextFieldColor,
                     enabledBorder: OutlineInputBorder(
@@ -445,7 +539,8 @@ class _CriarEventoState extends State<CriarEvento> {
                   keyboardType: TextInputType.name,
                   controller: _numeroParticipantes,
                   style: TextStyle(color: Colors.white),
-                  validator: (value) => validateMandatoryCamps(value),
+                  validator: (value) => validateMandatoryCamps(value!),
+                  maxLength: 4,
                   decoration: InputDecoration(
                     labelText: "Quantidade de Vagas",
                     labelStyle: TextStyle(
@@ -473,6 +568,7 @@ class _CriarEventoState extends State<CriarEvento> {
                       borderRadius: BorderRadius.circular(10.0),
                       borderSide: BorderSide(color: borderColor),
                     ),
+                    counterStyle: TextStyle(color: Colors.white),
                   ),
                 ),
               ),
@@ -528,8 +624,9 @@ class _CriarEventoState extends State<CriarEvento> {
                   backgroundColor: MaterialStateProperty.all(buttonColor),
                 ),
                 onPressed: () {
-                  _formKey.currentState!.validate();
-                  _createEventDB();
+                  if (_formKey.currentState!.validate()) {
+                    _sendEventDB();
+                  }
                 },
                 child: const Text("CRIAR"),
               ),
@@ -540,12 +637,19 @@ class _CriarEventoState extends State<CriarEvento> {
     );
   }
 
-  String? validateMandatoryCamps(String? value) {
-    if (value == null || value.isEmpty) {
+  String? validateMandatoryCamps(String value) {
+    if (value.length == 0) {
       return "Esse campo é obrigatório";
-    } else if (value.length < 2) {
-      return "Esse campo necessita de pelo menos 2 caracteres";
+    } else if (int.tryParse(value) == null) {
+      return "O valor inserido precisa ser um número";
     }
+    var getInt = int.parse(value);
+
+    if (getInt == 0) {
+      return "O valor tem que ser maior que zero";
+    }
+
+    return null;
   }
 
   Future<List> _getNomeUnidades(String requestURL) async {

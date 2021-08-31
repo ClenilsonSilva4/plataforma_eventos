@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:plataforma_eventos/usuario/organizador/eventosOrganizador.dart';
 
 import 'package:plataforma_eventos/usuario/organizador/organizador.dart';
 import 'package:plataforma_eventos/usuario/participante/participante.dart';
-import 'package:plataforma_eventos/evento/listarEventos.dart';
 import 'package:plataforma_eventos/usuario/opcoes/opcoes.dart';
 
 class InterfaceOrganizador extends StatefulWidget {
@@ -50,11 +50,7 @@ class _InterfaceOrganizadorState extends State<InterfaceOrganizador> {
       body: PageView(
         controller: _myPage,
         children: <Widget>[
-          ListarEventos().getEventosGrid(
-              widget._url + "getEventosOrganizador.php",
-              {"id": widget._usuario.id},
-              "criar um novo evento",
-              context),
+          EventosOrganizador(widget._url, widget._usuario.id),
           Opcoes(Participante.fromUsuario(widget._usuario), widget._url),
         ],
         onPageChanged: _onPageChanged,

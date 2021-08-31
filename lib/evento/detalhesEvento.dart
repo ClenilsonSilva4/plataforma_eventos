@@ -4,8 +4,10 @@ import 'package:plataforma_eventos/evento/evento.dart';
 class DetalhesEvento extends StatefulWidget {
   final Evento _evento;
   final FloatingActionButton _actionButton;
-  const DetalhesEvento(Evento evento, actionButton)
+  final String _typeDetail;
+  const DetalhesEvento(Evento evento, actionButton, String typeDetail)
       : _evento = evento,
+        _typeDetail = typeDetail,
         _actionButton = actionButton;
 
   @override
