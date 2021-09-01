@@ -16,7 +16,6 @@ class InscreverEvento extends StatefulWidget {
 }
 
 class _InscreverEventoState extends State<InscreverEvento> {
-  //TODO: Criar a opção de se inscrever no evento.
   @override
   Widget build(BuildContext context) {
     return Scaffold(
