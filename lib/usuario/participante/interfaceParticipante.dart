@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:plataforma_eventos/evento/inscreverEvento.dart';
+import 'package:plataforma_eventos/usuario/participante/inscreverNoEvento.dart';
 import 'package:plataforma_eventos/usuario/participante/participante.dart';
 import 'package:plataforma_eventos/usuario/opcoes/opcoes.dart';
 
@@ -53,7 +53,7 @@ class _InterfaceParticipanteState extends State<InterfaceParticipante> {
         controller: _myPage,
         children: <Widget>[
           InscricoesParticipante(widget._usuario.id, widget._url),
-          InscreverEvento(widget._url,
+          InscreverNoEvento(widget._url,
               {"id": widget._usuario.id, "dataFim": getTodayDateString()}),
           Certificados(widget._usuario.id, widget._url),
           Opcoes(widget._usuario, widget._url),

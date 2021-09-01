@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-/* import 'package:plataforma_eventos/usuario/organizador/interfaceOrganizador.dart';
-import 'usuario/organizador/organizador.dart'; */
+import 'package:plataforma_eventos/usuario/organizador/interfaceOrganizador.dart';
+import 'usuario/organizador/organizador.dart';
 import 'package:plataforma_eventos/usuario/participante/interfaceParticipante.dart';
 import 'package:plataforma_eventos/usuario/participante/participante.dart';
 
@@ -44,8 +44,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       url,
     );
 
-    /* //Interface Organizador
-    return InterfaceOrganizador(
+    //Interface Organizador
+    /* return InterfaceOrganizador(
       Organizador(
         "1",
         "Organizador1",

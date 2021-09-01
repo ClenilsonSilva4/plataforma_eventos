@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:plataforma_eventos/evento/evento.dart';
+import 'package:plataforma_eventos/usuario/participante/confirmarInscricao.dart';
 
 class DetalhesEvento extends StatefulWidget {
   final Evento _evento;
   final String _typeDetail;
   final _function;
+
   const DetalhesEvento(Evento evento, String typeDetail, function)
       : _evento = evento,
         _function = function,
@@ -207,12 +209,19 @@ class _DetalhesEventoState extends State<DetalhesEvento> {
                 actions: <Widget>[
                   TextButton(
                     onPressed: () async {
-                      await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => function,
-                        ),
-                      );
+                      if (buttonMessage.contains("inscrever")) {
+                        await ConfirmarInscricao().confirmEventInscriptionDB(
+                            widget._function["url"]!,
+                            context,
+                            widget._function);
+                      } else {
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => function,
+                          ),
+                        );
+                      }
                       Navigator.pop(context);
                       setState(() {});
                     },

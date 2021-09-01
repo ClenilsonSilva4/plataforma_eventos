@@ -52,9 +52,9 @@ class _PreencherEventoState extends State<PreencherEvento> {
       _descricaoEvento.text = widget._event.descricao;
       _cargaHoraria.text = widget._event.cargaHoraria;
       _numeroParticipantes.text = widget._event.numeroMaximoParticipantes;
-      _dataInicio.text = _getStringForUser(widget._event.dataInicio);
+      _dataInicio.text = _dataForUser(widget._event.dataInicio);
       _horarioInicio.text = widget._event.horarioInicio;
-      _dataFim.text = _getStringForUser(widget._event.dataFim);
+      _dataFim.text = _dataForUser(widget._event.dataFim);
       _horarioFim.text = widget._event.horarioFim;
       _finalURL = widget._url + "editarEvento.php";
       _action = "edita";
@@ -683,7 +683,7 @@ class _PreencherEventoState extends State<PreencherEvento> {
     return "";
   }
 
-  String _getStringForDB(String dateLocal) {
+  String _dataForDB(String dateLocal) {
     var splitedString = dateLocal.split("/");
     return splitedString.elementAt(2) +
         "-" +
@@ -692,7 +692,7 @@ class _PreencherEventoState extends State<PreencherEvento> {
         splitedString.elementAt(0);
   }
 
-  String _getStringForUser(String dateLocal) {
+  String _dataForUser(String dateLocal) {
     var splitedString = dateLocal.split("-");
     return splitedString.elementAt(2) +
         "/" +
@@ -708,10 +708,10 @@ class _PreencherEventoState extends State<PreencherEvento> {
     widget._event.numeroMaximoParticipantes =
         _numeroParticipantes.text.toString();
     widget._event.horarioInicio = _horarioInicio.text.toString();
-    widget._event.dataFim = _getStringForDB(_dataFim.text.toString());
+    widget._event.dataFim = _dataForDB(_dataFim.text.toString());
     widget._event.horarioFim = _horarioFim.text.toString();
     widget._event.idUnidade = _getUnidadeID();
-    widget._event.dataInicio = _getStringForDB(_dataInicio.text.toString());
+    widget._event.dataInicio = _dataForDB(_dataInicio.text.toString());
 
     if (widget._event.id == "") {
       var criacao = DateTime.now();

@@ -21,11 +21,11 @@ class _EventosOrganizadorState extends State<EventosOrganizador> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListarEventos().getEventosGrid(
-          widget._url + "getEventosOrganizador.php",
-          {"id": widget._idUsuario},
-          "editar o evento",
-          context),
+      body: ListarEventos(
+        widget._url + "getEventosOrganizador.php",
+        {"id": widget._idUsuario},
+        "editar o evento",
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showDialog<void>(
@@ -46,7 +46,8 @@ class _EventosOrganizadorState extends State<EventosOrganizador> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => PreencherEvento.criarEvento(
-                              "1", "http://192.168.0.2:80/projeto/"),
+                              widget._idUsuario,
+                              "http://192.168.0.2:80/projeto/"),
                         ),
                       );
                       Navigator.pop(context);

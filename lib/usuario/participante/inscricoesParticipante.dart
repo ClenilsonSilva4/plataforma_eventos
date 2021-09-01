@@ -16,8 +16,10 @@ class InscricoesParticipante extends StatefulWidget {
 class _InscricoesParticipanteState extends State<InscricoesParticipante> {
   @override
   Widget build(BuildContext context) {
-    ListarEventos getEventos = new ListarEventos();
-    return getEventos.getEventosGrid(widget._url + "getEventosUsuario.php",
-        {"id": widget._idUsuario}, "", context);
+    return ListarEventos(
+      widget._url + "getEventosUsuario.php",
+      {"id": widget._idUsuario},
+      "",
+    );
   }
 }
