@@ -24,7 +24,7 @@ class _InscreverEventoState extends State<InscreverEvento> {
       body: ListarEventos().getEventosGrid(
           widget._url + "getEventosAbertos.php",
           widget._body,
-          "inscrição",
+          "se inscrever",
           context),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

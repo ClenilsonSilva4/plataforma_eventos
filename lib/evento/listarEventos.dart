@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+
 import 'package:plataforma_eventos/evento/detalhesEvento.dart';
 import 'package:plataforma_eventos/evento/getEventData.dart';
-import 'package:plataforma_eventos/usuario/organizador/criarEvento.dart';
+import 'package:plataforma_eventos/usuario/organizador/preencherEvento.dart';
 import 'evento.dart';
+
+const String _initialURL = "http://192.168.0.2:80/projeto/";
 
 class ListarEventos {
   final Color _backgroundColorBotao = Colors.deepOrange[800]!;
@@ -11,9 +14,9 @@ class ListarEventos {
 
   Widget getEventosGrid(String requestURL, Map<String, String> body,
       String acaoEvento, BuildContext context) {
-    return Scaffold(
-      backgroundColor: _backgroundColor,
-      body: FutureBuilder<List<Evento>>(
+    return Container(
+      color: _backgroundColor,
+      child: FutureBuilder<List<Evento>>(
         future: GetEventData().getEventData(requestURL, body),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (!snapshot.hasError &&
@@ -81,16 +84,39 @@ class ListarEventos {
                                   _backgroundColorBotao),
                             ),
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => DetalhesEvento(
+                              if (acaoEvento.contains("editar")) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => DetalhesEvento(
                                       data,
-                                      getActionButton(
-                                          acaoEvento, context, requestURL),
-                                      acaoEvento),
-                                ),
-                              );
+                                      acaoEvento,
+                                      PreencherEvento(
+                                          data.id, _initialURL, data),
+                                    ),
+                                  ),
+                                );
+                              } else if (acaoEvento.contains("inscrever")) {
+                                //TODO: criar função para fazer a inscrição do participante no evento.
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => DetalhesEvento(
+                                        data,
+                                        acaoEvento,
+                                        PreencherEvento(
+                                            data.id, _initialURL, data)),
+                                  ),
+                                );
+                              } else {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        DetalhesEvento(data, acaoEvento, null),
+                                  ),
+                                );
+                              }
                             },
                             child: const Text("DETALHES"),
                           ),
@@ -104,10 +130,7 @@ class ListarEventos {
           } else if (snapshot.connectionState == ConnectionState.done) {
             return Center(
               child: Text(
-                //TODO: Ajustar para incluir o organizador e unidade também.
-                (body.containsKey("dataFim"))
-                    ? ("Não foram encontrados eventos que o usuário possa se inscrever")
-                    : ("Não foram encontrados eventos que o usuário esteja inscrito"),
+                "Não foi possível carregar os eventos",
                 style: TextStyle(
                   color: _textsDarkBackground,
                   fontWeight: FontWeight.bold,
@@ -120,70 +143,6 @@ class ListarEventos {
           return Center(child: CircularProgressIndicator());
         },
       ),
-      floatingActionButton: getActionButton(acaoEvento, context, requestURL),
     );
-  }
-
-  FloatingActionButton? getActionButton(
-      String buttonMessage, BuildContext context, String requestURL) {
-    if (buttonMessage.contains("editar") || buttonMessage.contains("criar")) {
-      return FloatingActionButton(
-        onPressed: () {
-          showDialog<void>(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                backgroundColor: Colors.grey[700],
-                content: Text(
-                  "Deseja " + buttonMessage + "?",
-                  style: TextStyle(
-                    color: _textsDarkBackground,
-                  ),
-                ),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CriarEvento(
-                              "1", "http://192.168.0.2:80/projeto/"),
-                        ),
-                      );
-                    },
-                    child: Text(
-                      "Sim",
-                      style: TextStyle(color: _textsDarkBackground),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text(
-                      "Não",
-                      style: TextStyle(color: _textsDarkBackground),
-                    ),
-                  ),
-                ],
-              );
-            },
-          );
-        },
-        child: (buttonMessage.contains("editar"))
-            ? Icon(
-                Icons.edit_rounded,
-                color: _textsDarkBackground,
-                size: 30,
-              )
-            : Icon(
-                Icons.add_circle_outline,
-                color: _textsDarkBackground,
-                size: 30,
-              ),
-        tooltip: buttonMessage,
-        backgroundColor: _backgroundColorBotao,
-      );
-    }
   }
 }

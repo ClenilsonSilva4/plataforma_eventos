@@ -1,19 +1,28 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:plataforma_eventos/evento/evento.dart';
 
-class CriarEvento extends StatefulWidget {
+class PreencherEvento extends StatefulWidget {
   final String _idUsuario;
   final String _url;
-  const CriarEvento(String idUsuario, String url)
+  final Evento _event;
+
+  PreencherEvento.criarEvento(String idUsuario, String url)
       : _idUsuario = idUsuario,
-        _url = url;
+        _url = url,
+        _event = new Evento("", "", "", "", "", "", "", "", "", "", "", "", "");
+
+  PreencherEvento(String idUsuario, String url, Evento event)
+      : _idUsuario = idUsuario,
+        _url = url,
+        _event = event;
 
   @override
-  _CriarEventoState createState() => _CriarEventoState();
+  _PreencherEventoState createState() => _PreencherEventoState();
 }
 
-class _CriarEventoState extends State<CriarEvento> {
+class _PreencherEventoState extends State<PreencherEvento> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController _nomeEvento = TextEditingController();
   TextEditingController _descricaoEvento = TextEditingController();
@@ -33,51 +42,48 @@ class _CriarEventoState extends State<CriarEvento> {
   late List _unidades;
   late DateTime _inicioEvento;
   late String _listValue;
+  late String _finalURL;
+  String _action = "cria";
 
-  String _getUnidadeID() {
-    for (var getUnidade in _unidades) {
-      print(getUnidade);
-      if (getUnidade.containsValue(_listValue)) {
-        return getUnidade["id_usuario"]!;
-      }
+  @override
+  void initState() {
+    if (widget._event.id != "") {
+      _nomeEvento.text = widget._event.nome;
+      _descricaoEvento.text = widget._event.descricao;
+      _cargaHoraria.text = widget._event.cargaHoraria;
+      _numeroParticipantes.text = widget._event.numeroMaximoParticipantes;
+      _dataInicio.text = _getStringForUser(widget._event.dataInicio);
+      _horarioInicio.text = widget._event.horarioInicio;
+      _dataFim.text = _getStringForUser(widget._event.dataFim);
+      _horarioFim.text = widget._event.horarioFim;
+      _finalURL = widget._url + "editarEvento.php";
+      _action = "edita";
     }
-    return "";
-  }
-
-  String _getStringForDB(String dateLocal) {
-    var splitedString = dateLocal.split("/");
-    return splitedString.elementAt(2) +
-        "-" +
-        splitedString.elementAt(1) +
-        "-" +
-        splitedString.elementAt(0);
+    super.initState();
   }
 
   void _sendEventDB() async {
     final Map<String, String> header = {
       'Content-Type': 'application/json; charset=UTF-8'
     };
-    var criacao = DateTime.now();
+
     final Map<String, String> body = {
-      "nome": _nomeEvento.text.toString(),
-      "descrição": _descricaoEvento.text.toString(),
-      "carga_horaria": _cargaHoraria.text.toString(),
-      "participantes": _numeroParticipantes.text.toString(),
-      "data_inicio": _getStringForDB(_dataInicio.text.toString()),
-      "horario_inicio": _horarioInicio.text.toString(),
-      "data_fim": _getStringForDB(_dataFim.text.toString()),
-      "horario_fim": _horarioFim.text.toString(),
-      "organizador": widget._idUsuario,
-      "unidade": _getUnidadeID(),
-      "data_criacao": criacao.year.toString() +
-          "-" +
-          criacao.month.toString() +
-          "-" +
-          criacao.day.toString(),
-      "data_autorizacao": "Aguardando",
+      "id": widget._event.id,
+      "nome": widget._event.nome,
+      "descrição": widget._event.descricao,
+      "carga_horaria": widget._event.cargaHoraria,
+      "participantes": widget._event.numeroMaximoParticipantes,
+      "data_inicio": widget._event.dataInicio,
+      "horario_inicio": widget._event.horarioInicio,
+      "data_fim": widget._event.dataFim,
+      "horario_fim": widget._event.horarioFim,
+      "organizador": widget._event.idOrganizador,
+      "unidade": widget._event.idUnidade,
+      "data_criacao": widget._event.dataCriacao,
+      "data_autorizacao": widget._event.dataAutorizacao,
     };
 
-    var getURL = Uri.parse(widget._url + "criarEvento.php");
+    var getURL = Uri.parse(_finalURL);
 
     http.Response response = await http.post(
       getURL,
@@ -92,7 +98,7 @@ class _CriarEventoState extends State<CriarEvento> {
           return AlertDialog(
             backgroundColor: Colors.grey[700],
             content: Text(
-              "Não foi possível criar o evento",
+              "Não foi possível " + _action + "r o evento",
               style: TextStyle(color: textColor),
             ),
             actions: <Widget>[
@@ -124,10 +130,10 @@ class _CriarEventoState extends State<CriarEvento> {
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text(
-            "Evento criado com sucesso",
+          content: Text(
+            "Evento " + _action + "do com sucesso",
             style: TextStyle(
-              color: Colors.white,
+              color: textColor,
             ),
           ),
           duration: const Duration(milliseconds: 1500),
@@ -151,7 +157,7 @@ class _CriarEventoState extends State<CriarEvento> {
       backgroundColor: Colors.grey[800],
       appBar: AppBar(
         title: Text(
-          "Criar Novo Evento",
+          _action[0].toUpperCase() + _action.substring(1) + "r Novo Evento",
           style: TextStyle(color: textColor, fontSize: 20),
         ),
         backgroundColor: appBarBackground,
@@ -625,10 +631,13 @@ class _CriarEventoState extends State<CriarEvento> {
                 ),
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
+                    _fillEvent();
                     _sendEventDB();
                   }
                 },
-                child: const Text("CRIAR"),
+                child: (widget._event.id == "")
+                    ? const Text("CRIAR")
+                    : const Text("EDITAR"),
               ),
             ],
           ),
@@ -662,5 +671,58 @@ class _CriarEventoState extends State<CriarEvento> {
     _unidades = items;
 
     return items;
+  }
+
+  String _getUnidadeID() {
+    for (var getUnidade in _unidades) {
+      print(getUnidade);
+      if (getUnidade.containsValue(_listValue)) {
+        return getUnidade["id_usuario"]!;
+      }
+    }
+    return "";
+  }
+
+  String _getStringForDB(String dateLocal) {
+    var splitedString = dateLocal.split("/");
+    return splitedString.elementAt(2) +
+        "-" +
+        splitedString.elementAt(1) +
+        "-" +
+        splitedString.elementAt(0);
+  }
+
+  String _getStringForUser(String dateLocal) {
+    var splitedString = dateLocal.split("-");
+    return splitedString.elementAt(2) +
+        "/" +
+        splitedString.elementAt(1) +
+        "/" +
+        splitedString.elementAt(0);
+  }
+
+  void _fillEvent() {
+    widget._event.nome = _nomeEvento.text.toString();
+    widget._event.descricao = _descricaoEvento.text.toString();
+    widget._event.cargaHoraria = _cargaHoraria.text.toString();
+    widget._event.numeroMaximoParticipantes =
+        _numeroParticipantes.text.toString();
+    widget._event.horarioInicio = _horarioInicio.text.toString();
+    widget._event.dataFim = _getStringForDB(_dataFim.text.toString());
+    widget._event.horarioFim = _horarioFim.text.toString();
+    widget._event.idUnidade = _getUnidadeID();
+    widget._event.dataInicio = _getStringForDB(_dataInicio.text.toString());
+
+    if (widget._event.id == "") {
+      var criacao = DateTime.now();
+      widget._event.dataAutorizacao = "Aguardando";
+      widget._event.idOrganizador = widget._idUsuario;
+      widget._event.dataCriacao = criacao.year.toString() +
+          "-" +
+          criacao.month.toString() +
+          "-" +
+          criacao.day.toString();
+      _finalURL = widget._url + "criarEvento.php";
+    }
   }
 }

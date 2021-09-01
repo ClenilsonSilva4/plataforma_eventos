@@ -3,12 +3,12 @@ import 'package:plataforma_eventos/evento/evento.dart';
 
 class DetalhesEvento extends StatefulWidget {
   final Evento _evento;
-  final FloatingActionButton _actionButton;
   final String _typeDetail;
-  const DetalhesEvento(Evento evento, actionButton, String typeDetail)
+  final _function;
+  const DetalhesEvento(Evento evento, String typeDetail, function)
       : _evento = evento,
-        _typeDetail = typeDetail,
-        _actionButton = actionButton;
+        _function = function,
+        _typeDetail = typeDetail;
 
   @override
   _DetalhesEventoState createState() => _DetalhesEventoState();
@@ -19,6 +19,7 @@ class _DetalhesEventoState extends State<DetalhesEvento> {
   final Color _appBarBackground = Colors.teal[800]!;
   final Color _backgroundColor = Colors.grey[800]!;
   final Color _containerColor = Colors.grey[700]!;
+  final Color _backgroundColorBotao = Colors.deepOrange[800]!;
 
   @override
   Widget build(BuildContext context) {
@@ -181,7 +182,73 @@ class _DetalhesEventoState extends State<DetalhesEvento> {
           ],
         ),
       ),
-      floatingActionButton: widget._actionButton,
+      floatingActionButton:
+          getActionButton(widget._typeDetail, context, widget._function),
     );
+  }
+
+  FloatingActionButton? getActionButton(
+      String buttonMessage, BuildContext context, var function) {
+    if (buttonMessage.contains("editar") ||
+        buttonMessage.contains("inscrever")) {
+      return FloatingActionButton(
+        onPressed: () {
+          showDialog<void>(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                backgroundColor: Colors.grey[700],
+                content: Text(
+                  "Deseja " + buttonMessage + "?",
+                  style: TextStyle(
+                    color: _textsDarkBackground,
+                  ),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () async {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => function,
+                        ),
+                      );
+                      Navigator.pop(context);
+                      setState(() {});
+                    },
+                    child: Text(
+                      "Sim",
+                      style: TextStyle(color: _textsDarkBackground),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      "Não",
+                      style: TextStyle(color: _textsDarkBackground),
+                    ),
+                  ),
+                ],
+              );
+            },
+          );
+        },
+        child: (buttonMessage.contains("editar"))
+            ? Icon(
+                Icons.edit_rounded,
+                color: _textsDarkBackground,
+                size: 30,
+              )
+            : Icon(
+                Icons.add_circle_outline,
+                color: _textsDarkBackground,
+                size: 30,
+              ),
+        tooltip: buttonMessage,
+        backgroundColor: _backgroundColorBotao,
+      );
+    }
   }
 }

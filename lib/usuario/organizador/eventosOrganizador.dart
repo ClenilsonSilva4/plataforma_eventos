@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:plataforma_eventos/evento/listarEventos.dart';
 
-import 'criarEvento.dart';
+import 'preencherEvento.dart';
 
 class EventosOrganizador extends StatefulWidget {
   final String _url;
@@ -45,7 +45,7 @@ class _EventosOrganizadorState extends State<EventosOrganizador> {
                       await Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => CriarEvento(
+                          builder: (context) => PreencherEvento.criarEvento(
                               "1", "http://192.168.0.2:80/projeto/"),
                         ),
                       );

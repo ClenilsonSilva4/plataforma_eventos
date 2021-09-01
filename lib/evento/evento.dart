@@ -41,29 +41,56 @@ class Evento {
         _idOrganizador = idOrganizador,
         _idUnidade = idUnidade;
 
-  String get id => this._id;
+  get id => this._id;
 
-  String get nome => this._nome;
+  set id(value) => this._id = value;
 
-  String get descricao => this._descricao;
+  get nome => this._nome;
 
-  String get dataInicio => this._dataInicio;
+  set nome(value) => this._nome = value;
 
-  String get horarioInicio => this._horarioInicio;
+  get descricao => this._descricao;
 
-  String get dataFim => this._dataFim;
+  set descricao(value) => this._descricao = value;
 
-  String get horarioFim => this._horarioFim;
+  get dataInicio => this._dataInicio;
 
-  String get cargaHoraria => this._cargaHoraria;
+  set dataInicio(value) => this._dataInicio = value;
 
-  String get numeroMaximoParticipantes => this._numeroMaximoParticipantes;
+  get horarioInicio => this._horarioInicio;
 
-  String get dataCriacao => this._dataCriacao;
+  set horarioInicio(value) => this._horarioInicio = value;
 
-  String get dataAutorizacao => this._dataAutorizacao;
+  get dataFim => this._dataFim;
 
-  String get idOrganizador => this._idOrganizador;
+  set dataFim(value) => this._dataFim = value;
 
-  String get idUnidade => this._idUnidade;
+  get horarioFim => this._horarioFim;
+
+  set horarioFim(value) => this._horarioFim = value;
+
+  get cargaHoraria => this._cargaHoraria;
+
+  set cargaHoraria(value) => this._cargaHoraria = value;
+
+  get numeroMaximoParticipantes => this._numeroMaximoParticipantes;
+
+  set numeroMaximoParticipantes(value) =>
+      this._numeroMaximoParticipantes = value;
+
+  get dataCriacao => this._dataCriacao;
+
+  set dataCriacao(value) => this._dataCriacao = value;
+
+  get dataAutorizacao => this._dataAutorizacao;
+
+  set dataAutorizacao(value) => this._dataAutorizacao = value;
+
+  get idOrganizador => this._idOrganizador;
+
+  set idOrganizador(value) => this._idOrganizador = value;
+
+  get idUnidade => this._idUnidade;
+
+  set idUnidade(value) => this._idUnidade = value;
 }

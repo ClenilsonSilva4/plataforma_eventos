@@ -57,7 +57,7 @@ class Certificados extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.fromLTRB(5, 0, 5, 5),
                         child: Text(
-                          data._dataInicio + " - " + data._dataFim,
+                          data.dataInicio + " - " + data.dataFim,
                           style: TextStyle(
                             fontSize: 11,
                           ),
