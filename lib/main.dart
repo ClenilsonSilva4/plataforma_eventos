@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:plataforma_eventos/usuario/organizador/interfaceOrganizador.dart';
-import 'usuario/organizador/organizador.dart';
-import 'package:plataforma_eventos/usuario/participante/interfaceParticipante.dart';
-import 'package:plataforma_eventos/usuario/participante/participante.dart';
+import 'acesso/login.dart';
 
 const url = "http://192.168.0.2:80/projeto/";
 
@@ -35,14 +32,14 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   @override
   Widget build(BuildContext context) {
     //Passa pelo login
-    //return Login(url);
+    return Login(url);
 
     //Entra direto na interface do participante
-    return InterfaceParticipante(
+    /* return InterfaceParticipante(
       Participante("2", "Participante 2", "teste7@teste.com", "ansfisoanfsa",
           "testando", "Curso Teste"),
       url,
-    );
+    ); */
 
     //Interface Organizador
     /* return InterfaceOrganizador(

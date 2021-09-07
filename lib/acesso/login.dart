@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:plataforma_eventos/acesso/cadastro.dart';
+import 'package:plataforma_eventos/usuario/organizador/interfaceOrganizador.dart';
 import 'package:plataforma_eventos/usuario/participante/interfaceParticipante.dart';
 
 import 'package:plataforma_eventos/usuario/participante/participante.dart';
@@ -57,7 +59,7 @@ class _LoginState extends State<Login> {
         child: Column(
           children: <Widget>[
             Container(
-              padding: EdgeInsets.all(10),
+              padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
               alignment: Alignment.center,
               child: Icon(
                 Icons.account_box_rounded,
@@ -66,7 +68,7 @@ class _LoginState extends State<Login> {
               ),
             ),
             Container(
-              padding: EdgeInsets.all(10),
+              padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
               child: TextFormField(
                 controller: _email,
                 keyboardType: TextInputType.emailAddress,
@@ -186,12 +188,9 @@ class _LoginState extends State<Login> {
               ],
             ),
             Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4),
-              ),
               width: double.infinity,
-              padding: EdgeInsets.all(10),
-              height: 60,
+              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+              height: 40,
               child: ElevatedButton(
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.teal[600]),
@@ -212,30 +211,35 @@ class _LoginState extends State<Login> {
             ),
             Expanded(
               child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      Text(
-                        "Ainda não possui cadastro?",
-                        style: TextStyle(
-                          color: _iconsNTextColor,
-                          fontSize: 16,
-                        ),
-                        textAlign: TextAlign.center,
+                alignment: Alignment.bottomCenter,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    Text(
+                      "Ainda não possui cadastro?",
+                      style: TextStyle(
+                        color: _iconsNTextColor,
+                        fontSize: 16,
                       ),
-                      ElevatedButton(
+                      textAlign: TextAlign.center,
+                    ),
+                    Container(
+                      padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
+                      height: 50,
+                      child: ElevatedButton(
                         style: ButtonStyle(
                           backgroundColor:
                               MaterialStateProperty.all(Colors.deepOrange[900]),
-                          shape: MaterialStateProperty.all(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                          ),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Cadastro(widget._url),
+                            ),
+                          );
+                        },
                         child: Text(
                           "Cadastre-se",
                           style: TextStyle(
@@ -244,8 +248,10 @@ class _LoginState extends State<Login> {
                           ),
                         ),
                       ),
-                    ],
-                  )),
+                    )
+                  ],
+                ),
+              ),
             ),
           ],
         ),
@@ -261,6 +267,14 @@ class _LoginState extends State<Login> {
         context,
         MaterialPageRoute(
           builder: (context) => InterfaceParticipante(_usuario, widget._url),
+        ),
+      );
+    }
+    if (_usuario is Organizador) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => InterfaceOrganizador(_usuario, widget._url),
         ),
       );
     }
@@ -323,7 +337,6 @@ class _LoginState extends State<Login> {
           usuario["id_usuario"],
           usuario["nome"],
           email,
-          usuario["telefone"],
           senha,
           tipoUsuario["curso"],
         );
@@ -332,7 +345,6 @@ class _LoginState extends State<Login> {
           usuario["id_usuario"],
           usuario["nome"],
           email,
-          usuario["telefone"],
           senha,
         );
       } else if (tipoUsuario.containsKey("Unidade")) {
@@ -340,7 +352,6 @@ class _LoginState extends State<Login> {
           usuario["id_usuario"],
           usuario["nome"],
           email,
-          usuario["telefone"],
           senha,
         );
       }

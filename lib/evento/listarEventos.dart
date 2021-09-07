@@ -167,7 +167,7 @@ class _ListarEventosState extends State<ListarEventos> {
             } else if (snapshot.connectionState == ConnectionState.done) {
               return Center(
                 child: Text(
-                  "Não foi possível carregar os eventos",
+                  "Não foram encontrados outros eventos",
                   style: TextStyle(
                     color: _textsDarkBackground,
                     fontWeight: FontWeight.bold,
